@@ -1,5 +1,14 @@
+//this is the package for the program, the package name has
+//to be the same as the path from the root to the file,
+//look at the folders you had to open to get to this file.
+//that's what this package name entails
 package org.firstinspires.ftc.teamcode;
 
+//next up are the libraries used.
+//you usually don't really have to mess around with these in
+//a daily basis but if you started to use a component for
+//which you don't yet have the library, you should go to its
+//rev page and look for the library for it.
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -44,9 +53,28 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
+//this line sets up how the program will be displayed on the driver station
+//@TeleOp makes it a teleop program (if it was autonomous it would be @Auto )
+//name="Drive2" sets the name that shows up on the driver station
+//grou="Linear Opmode" helps organize into groups but I don't think it matters tbh
 @TeleOp(name="Drive2", group="Linear Opmode")
+
+//this is just standard java class initialization 
+//but the extends is because the class comes from another class?? think clones
+//or something, you don't need to understand 'extends' just be aware of it
 public class Drive2 extends LinearOpMode {
-    // Declare OpMode members.
+    // this is were you first declare what stuff you're using on the program
+    // like the motors, sensors, even this runtime thing below that I'll explain 
+    // later, for now just know it's a cronometer that starts running the moment
+    // you start the program
+    //
+    // note how each component is declared as any variable, but instead of things
+    // like 'int', 'float' or 'boolean' you have the specific kind of component it
+    // is, such as 'DcMotor', 'Servo', 'ColorSensor'. these keywords aren't in java
+    // by default, that's why we import that bunch of libraries on top.
+    //
+    // note how all the components are given the value "null"
+    // this will be important later :)
     private ElapsedTime runtime = new ElapsedTime();
 
 
@@ -66,8 +94,13 @@ public class Drive2 extends LinearOpMode {
     private Servo bottomClaw = null;
     private Servo rack = null;
 
-    //DistanceSensor distance;
 
+   //after you're done declaring the physical components, you can declare all the
+   //variables that you think you'll need. all of these I've added for convenience,
+   //though some of these may be obsolete. don't erase any of these until you're sure
+   //they don't appear anywhere else in the code. a good trick for this is pressing
+   //CTRL+F and looking up the variable name, it'll tell you how many instances of the
+   //name are there in the code.
 
     public boolean gripperAngleUp;
     public boolean gripperClosed;
@@ -97,13 +130,35 @@ public class Drive2 extends LinearOpMode {
 
     public double wakeTime;
 
+
+    //after we're done with the OpMode components, we can move on to the next phase.
+    //I have no idea what @Override does, but it is not important. just leave the line
+    //there for your and the team's safety.
     @Override
+
+    //this following line is the function that runs when you press "INIT" in the
+    //Driver Station. it will do everything below this function and then stop
+    //right before the waitForStart() line.
     public void runOpMode() {
+
+        //there's a bunch going on in this block so i'll make it simple.
+        //remember the part where you declare the components earlier?
+        //they were given the value "null" because they weren't in use yet
+        //
+        //now, you give them a value. the value you're giving them is the 
+        //name that you have given them in the Driver Station "configure robot" page
+        //you use hardwareMap because that's the thing where the info is stored
+        //get() is the function to gather the data. 
+        //DcMotor is the type of variable you're making the program look for
+        //class is uhhhhhhhh don't worry about it
+        //then you type the name, since it's a string of text it goes enclosed in
+        //quoation marks.
+
         telemetry.addData("Status", "Initialized");
-        telemetry.update();
+        telemetry.update();//btw this is how you print on the driver station
 
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
+        // Initialize thep hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
@@ -128,12 +183,22 @@ public class Drive2 extends LinearOpMode {
 
         //distance = hardwareMap.get(DistanceSensor.class, "sensor_distance");
 
+        
+        //this part is a little weird but it's for reversing the rotation of
+        //the motor. this is important because motors like the wheels need to
+        //spin in a specific pattern for the motion like strafing or rotating.
+        //therefore (go random fancy word), some motors are reversed, so that
+        //positive power makes them go forward instead of backwards.
+
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         //rack.setDirection(Servo.Direction.REVERSE);
+
+        //this was for resetting the encoders, but it is useless now since we don't
+        //use wheel encoders anymore. we now have the odometry pods
 
         //frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -156,6 +221,12 @@ public class Drive2 extends LinearOpMode {
         // armDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //armSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+
+        //this one is for setting up what you want the motor to do when you set
+        //the power to zero, if you want the motor to stop and retain that position, 
+        //you type BRAKE like this line below, but if you want the motor to be free
+        //you use COAST, i think? look up "zeropowerbehavior ftc" on google for the
+        //2nd option, for I have forgotten it :(
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -176,12 +247,15 @@ public class Drive2 extends LinearOpMode {
         boolean gripperAnglePreviouslyPressed = false;
 
 
-        // Wait for the game to start (driver presses PLAY)
+        //so this is where I said the program would stop before you press the triangle
+        //"PLAY" button on the driver station.
         waitForStart();
-        runtime.reset();
+        //the driver now has pressed start, it'll go line by line and then start
+        //the loop on "while (opModeIsActive()) {"
+        runtime.reset(); //this starts the aforementioned cronometer
 
-        mainArm.setPosition(1.0);
-        topArm.setPosition(0.5);
+        mainArm.setPosition(1.0);//this is how you move a servo. they're all coded
+        topArm.setPosition(0.5);//with a range between 1 and 0
         topClaw.setPosition(0.4);
 
 
@@ -193,8 +267,12 @@ public class Drive2 extends LinearOpMode {
        gripperClosed=false;
        gripperAngleUp=true;*/
 
-        // run until the end of the match (driver presses STOP). This inverts the wheel controlers.
+        //this is the main LOOP, it's a block of code that wll run once and again until
+        //the end of time, i mean, until the driver stops the program.
         while (opModeIsActive()) {
+
+            //this whole thing is for the driving direction switch, it just makes the wheel's
+            //power negative when isDrivingInverted is set to true (you guessed it, a boolean)
             if (isDrivingInverted) {
                 drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(
