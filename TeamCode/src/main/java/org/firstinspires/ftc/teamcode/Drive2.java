@@ -66,7 +66,10 @@ public class Drive2 extends LinearOpMode {
     // this is were you first declare what stuff you're using on the program
     // like the motors, sensors, even this runtime thing below that I'll explain 
     // later, for now just know it's a cronometer that starts running the moment
-    // you start the program
+    // you start the program. if you don't know what a cronometer is
+    //look it up on google or the dictionary, you can probably use a cronometer
+    //if you open up the Clock app on your phone
+    
     //
     // note how each component is declared as any variable, but instead of things
     // like 'int', 'float' or 'boolean' you have the specific kind of component it
